@@ -25,7 +25,7 @@ export function BeaconDetails() {
                     <div>✅200</div>
                 </div>
             </div>
-            <button className="w-full text-sm hover:text-white hover:bg-red-500 cursor-pointer font-semibold border-gray-200 border-1 p-2 mt-3 rounded-lg transition-all">Delete</button>
+            <button className="w-full text-sm hover:text-white hover:bg-red-500 cursor-pointer font-semibold border-gray-300 border-1 p-2 mt-3 rounded-lg transition-all">Delete</button>
         </div>
     );
 }
