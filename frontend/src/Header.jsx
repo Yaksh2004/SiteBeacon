@@ -1,19 +1,20 @@
-    import { useNavigate } from "react-router-dom";
+    import { useNavigate, useLocation } from "react-router-dom";
     import { useState, useEffect } from "react";
     import { LoginPop } from "./Components/LoginPop";
 
     export function Header() {
         const navigate = useNavigate();
+        const location = useLocation();
         const backToHome = () => {
             navigate("/")
         }
-        const [userInitial, setUserInitial] = useState("Y");
+        const [userInitial, setUserInitial] = useState("@");
         useEffect(() => {
             const user = localStorage.getItem("name");
             if (user) {
                 setUserInitial(user.charAt(0).toUpperCase());
             }
-        }, []);
+        }, [location]);
 
         const [showPop, setShowPop] = useState(false);
 

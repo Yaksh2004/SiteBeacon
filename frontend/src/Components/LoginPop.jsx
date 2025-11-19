@@ -1,18 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export function LoginPop() {
     const name = localStorage.getItem("name");
     const email = localStorage.getItem("email");
     const navigate = useNavigate();
+    
 
      const handleSignOut = () => {
-        // 1. Clear user info and token from localStorage
-        localStorage.removeItem("token");
-        localStorage.removeItem("name");
-        localStorage.removeItem("email");
-
-        // 2. Redirect to login page
+        localStorage.clear()
         navigate("/login");
+         window.location.reload();
     }
 
     return (

@@ -4,8 +4,8 @@ import { ResponseTimeAvg } from "./Components/ResponseTimeAvg";
 import { ResponseTimeMax } from "./Components/ResponseTimeMax";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import axios from "axios";
-import { use } from "react";
 
 export function DashBoard() {
     const [beacons, setBeacons] = useState([]);
@@ -20,6 +20,40 @@ export function DashBoard() {
       navigate("/login");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userEmail = localStorage.getItem("email");
+    const userId = localStorage.getItem("userId"); // If you store it
+
+    if (!token) {
+        navigate("/login");
+        return;
+    }
+
+    // CONNECT SOCKET
+    const socket = io("http://localhost:3000", {
+        query: { userId: userId }
+    });
+
+    // RECEIVE LIVE BEACON UPDATES
+    socket.on("beaconUpdate", (updatedBeacon) => {
+        setBeacons(prev => {
+        const exists = prev.find(b => b._id === updatedBeacon._id);
+        if (exists) {
+            return prev.map(b => (b._id === updatedBeacon._id ? updatedBeacon : b));
+        } else {
+            return [...prev, updatedBeacon];
+        }
+        });
+
+    });
+
+    return () => {
+        socket.disconnect();
+    };
+}, []);
+
 
     useEffect(() => {
       const fetchBeacons = async () => {
@@ -38,21 +72,22 @@ export function DashBoard() {
     }, []);
 
     const findAvgTime = (beacons) => {
-        let totalDuration = 0;
-        beacons.forEach(beacon => {
-            totalDuration += beacon.lastDuration;
-        });
-        return parseFloat((totalDuration / beacons.length).toFixed(2));
-    }
+    const valid = beacons.filter(b => typeof b.lastDuration === "number");
+    if (valid.length === 0) return 0;
+    return (valid.reduce((a, b) => a + b.lastDuration, 0) / valid.length).toFixed(2);
+    };
+    
     const findMaxTime = (beacons) => {
-        let maxDuration = 0;
-        beacons.forEach(beacon => {
-            if (beacon.lastDuration > maxDuration) {
-                maxDuration = beacon.lastDuration;
-            }
-        });
-        return parseFloat(maxDuration.toFixed(2));
-    }
+    const valid = beacons.filter(
+        b => typeof b.lastDuration === "number" && !isNaN(b.lastDuration)
+    );
+
+    if (valid.length === 0) return 0;
+
+    const maxValue = Math.max(...valid.map(b => b.lastDuration));
+    return parseFloat(maxValue.toFixed(2));
+};
+
 
     const [avgTime, setAvgTime] = useState(0);
     const [maxTime, setMaxTime] = useState(0);

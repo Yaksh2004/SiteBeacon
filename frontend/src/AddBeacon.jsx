@@ -17,49 +17,38 @@ export function AddBeacon() {
     }, [navigate]);
 
     const handleAdd = async () => {
-      if (!name || !url) {
-        setStatus("⚠️ Please enter both name and URL");
-        return;
+  if (!name || !url) {
+    setStatus("⚠️ Please enter both name and URL");
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const payload = {
+      title: name,
+      url: url
+    };
+
+    const response = await axios.post(
+      "http://localhost:3000/jobs",
+      payload,
+      {
+        headers: { Authorization: `${token}` },
       }
+    );
 
-      try {
-      const token = localStorage.getItem("token");
+    setStatus(`✅ Beacon "${name}" created`);
+    setName("");
+    setUrl("");
+    navigate("/");
 
-      const payload = {
-        job: {
-          url,
-          enabled: true,
-          saveResponses: true,
-          title: name, 
-          schedule: {
-            timezone: "Europe/Berlin",
-            expiresAt: 0,
-            hours: [-1],   
-            mdays: [-1],   
-            months: [-1],  
-            wdays: [-1],   
-            minutes: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55], 
-          },
-        },
-      };
+  } catch (error) {
+    console.error(error);
+    setStatus("❌ Failed to create beacon");
+  }
+};
 
-      const response = await axios.post(
-        "http://localhost:3000/jobs",
-        payload,
-        {
-          headers: { Authorization: `${token}` },
-        }
-      );
-
-      setStatus(`✅ Beacon "${name}" created (ID: ${response.data.jobId})`);
-      setName("");
-      setUrl("");
-      navigate("/");
-      } catch (error) {
-        console.error(error);
-        setStatus("❌ Failed to create beacon");
-      }
-    }
 
     return (<div className="p-10 flex flex-col shadow m-5 border border-gray-200 rounded-2xl">
         <div className="text-4xl font-semibold">Create a new beacon:</div>

@@ -23,6 +23,7 @@ export function Login() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("name", response.data.user.name);
       localStorage.setItem("email", response.data.user.email);
+      localStorage.setItem("userId", response.data.user.id);
       navigate("/");
     } catch (err) {
       console.error(err);
