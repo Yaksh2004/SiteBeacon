@@ -10,7 +10,10 @@ const beaconSchema = new mongoose.Schema({
   lastDuration: { type: Number, default: null },
 
   lastExecution: { type: Date, default: null },
-  nextExecution: { type: Date, default: null }
+  nextExecution: { type: Date, default: null },
+
+  alertSent: { type: Boolean, default: false }
+
 
 }, { timestamps: true });
 

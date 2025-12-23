@@ -1,5 +1,6 @@
+import "dotenv/config";
+
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import { createServer } from "http";
@@ -14,7 +15,7 @@ import User from "./models/userModel.js";
 import { checkWebsite } from "./utils/checkWebsite.js";
 import { startScheduler } from "./workers/scheduler.js";
 
-dotenv.config();
+
 const app = express();
 
 app.use(express.json());

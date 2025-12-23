@@ -26,7 +26,7 @@ export function AddBeacon() {
     const token = localStorage.getItem("token");
 
     const payload = {
-      title: name,
+      title: name.trim(),
       url: url
     };
 
