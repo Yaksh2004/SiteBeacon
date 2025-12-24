@@ -34,3 +34,20 @@ export async function sendBeaconFailMail(to, beacon) {
     console.error(`Error sending email to ${to}:`, error);
   }
 }
+
+export async function sendOtpMail(to, otp) {
+  const mailOptions = {
+    from: `"SiteBeacon" <${process.env.SMTP_SENDER_MAIL}>`,
+    to,
+    subject: "Your SiteBeacon Login OTP",
+    text: `Your OTP for login is ${otp}. It is valid for 5 minutes.`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`OTP email sent to ${to}`);
+  } catch (error) {
+    console.error("Failed to send OTP email:", error);
+    throw new Error("OTP email failed");
+  }
+}

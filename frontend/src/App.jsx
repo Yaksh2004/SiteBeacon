@@ -5,6 +5,7 @@ import { Login } from './Login'
 import { SignUp } from './SignUp'
 import { Header } from './Header'
 import { AddBeacon } from './AddBeacon'
+import { VerifyOtp } from './VerifyOtp'
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="add-beacon" element={<AddBeacon />} />
+            <Route path="verify-otp" element={<VerifyOtp />} />
           </Route>
         </Routes>
       </BrowserRouter>
