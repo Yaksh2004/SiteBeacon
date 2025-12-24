@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "./api";
 
 
 export function AddBeacon() {
@@ -30,8 +30,8 @@ export function AddBeacon() {
       url: url
     };
 
-    const response = await axios.post(
-      "http://localhost:3000/jobs",
+    const response = await api.post(
+      "/jobs",
       payload,
       {
         headers: { Authorization: `${token}` },

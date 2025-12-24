@@ -1,11 +1,11 @@
-import axios from "axios";
+import api from "../api";
 
 export function BeaconDetails({ beacon, updateDelete }) {
 
     const handleDelete = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.delete("http://localhost:3000/jobs/" + beacon._id, {
+            const response = await api.delete("/jobs/" + beacon._id, {
                 headers: { Authorization: `${token}` },
             });
 

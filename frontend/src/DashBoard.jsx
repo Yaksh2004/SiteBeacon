@@ -5,7 +5,7 @@ import { ResponseTimeMax } from "./Components/ResponseTimeMax";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import axios from "axios";
+import api from "./api";
 
 export function DashBoard() {
     const [beacons, setBeacons] = useState([]);
@@ -59,7 +59,7 @@ export function DashBoard() {
       const fetchBeacons = async () => {
         try {
             const token = localStorage.getItem("token");
-          const response = await axios.get("http://localhost:3000/jobs", {
+          const response = await api.get("/jobs", {
             headers: { Authorization: `${token}` },
           });
           setBeacons(response.data.beacons);
@@ -112,7 +112,7 @@ export function DashBoard() {
     const refreshBeacons = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get("http://localhost:3000/jobsRefresh", {
+            const response = await api.get("/jobsRefresh", {
             headers: { Authorization: `${token}` },
             });
             
