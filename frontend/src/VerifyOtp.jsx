@@ -22,7 +22,6 @@ export function VerifyOtp() {
   const handleVerifyOtp = async () => {
     if (loading) return;
 
-    // ✅ basic validation
     if (!otp.trim()) {
       setError("OTP is required");
       return;
@@ -40,7 +39,6 @@ export function VerifyOtp() {
         }
       );
 
-      // ✅ OTP verified → store auth
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("name", response.data.user.name);
       localStorage.setItem("email", response.data.user.email);

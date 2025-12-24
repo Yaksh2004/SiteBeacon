@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 export async function sendBeaconFailMail(to, beacon) {
   const mailOptions = {
-    from: process.env.SMTP_SENDER_MAIL,
+    from: `SiteBeacon <${process.env.SMTP_SENDER_MAIL}>`,
     to,
     subject: `Beacon Alert: ${beacon.title} is DOWN`,
     text: `Hello,

@@ -24,7 +24,7 @@ export function DashBoard() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userEmail = localStorage.getItem("email");
-    const userId = localStorage.getItem("userId"); // If you store it
+    const userId = localStorage.getItem("userId");
 
     if (!token) {
         navigate("/login");
@@ -56,24 +56,20 @@ export function DashBoard() {
 
 
     useEffect(() => {
-  const fetchBeacons = async () => {
-    try {
-        const token = localStorage.getItem("token");
-        const response = await api.get("/jobs", {
-            headers: { Authorization: token },
-        });
-
-        const list = response.data?.beacons;
-        setBeacons(Array.isArray(list) ? list : []);
+      const fetchBeacons = async () => {
+        try {
+            const token = localStorage.getItem("token");
+          const response = await api.get("/jobs", {
+            headers: { Authorization: `${token}` },
+          });
+          setBeacons(response.data.beacons);
         } catch (error) {
-        console.error("Fetch beacons failed", error);
-        setBeacons([]); 
+          console.error(error);
         }
-    };
+      };
 
-    fetchBeacons();
+      fetchBeacons();
     }, []);
-
 
     const findAvgTime = (beacons) => {
     const valid = beacons.filter(b => typeof b.lastDuration === "number");

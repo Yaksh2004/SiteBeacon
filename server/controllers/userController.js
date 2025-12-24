@@ -56,10 +56,8 @@ export const loginUser = async (req, res) => {
     const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000);
     user.otpHash = otpHash;
     user.otpExpiresAt = otpExpiresAt;
-    console.log("otp created");
 
     await user.save();
-    console.log("user saved");
     await sendOtpMail(user.email, otp);
 
     res.status(200).json({
@@ -98,7 +96,7 @@ export const verifyOtp = async (req, res) => {
 
     res.status(200).json({
       user: {
-        _id: user._id,
+        id: user._id,
         name: user.name,
         email: user.email,
       },

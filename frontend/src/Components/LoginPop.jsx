@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 export function LoginPop() {
     const name = localStorage.getItem("name");
@@ -10,7 +9,7 @@ export function LoginPop() {
      const handleSignOut = () => {
         localStorage.clear()
         navigate("/login");
-         window.location.reload();
+        window.location.reload();
     }
 
     return (

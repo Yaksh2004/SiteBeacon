@@ -61,7 +61,7 @@ app.post("/jobs", authUser, async (req, res) => {
       title: req.body.title,
       url: req.body.url,
       user: userId,
-      nextExecution: new Date(Date.now() + 60000),
+      nextExecution: new Date(Date.now() + 10000),
     });
 
     await User.findByIdAndUpdate(userId, { $push: { beacons: beacon._id } });
@@ -104,7 +104,7 @@ app.get("/jobsRefresh", authUser, async (req, res) => {
         beacon.lastStatus = result.status;
         beacon.lastDuration = result.duration;
         beacon.lastExecution = new Date();
-        beacon.nextExecution = new Date(Date.now() + 60000);
+        beacon.nextExecution = new Date(Date.now() + 10000);
 
         await beacon.save();
         return beacon;

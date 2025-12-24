@@ -27,7 +27,7 @@ export function AddBeacon() {
 
     const payload = {
       title: name.trim(),
-      url: url
+      url: url.trim(),
     };
 
     const response = await api.post(

@@ -5,7 +5,7 @@ import { checkWebsite } from "../utils/checkWebsite.js";
 import { sendBeaconFailMail } from "../utils/sendMail.js";
 
 export function startScheduler(io) {
-  cron.schedule("*/20 * * * * *", async () => {
+  cron.schedule("*/10 * * * * *", async () => {
     const beacons = await Beacon.find();
 
     for (const beacon of beacons) {
@@ -39,7 +39,6 @@ export function startScheduler(io) {
         io.to(beacon.user.toString()).emit("beaconUpdate", beacon);
       } catch (err) {
         if (err.name === "DocumentNotFoundError") {
-          console.warn(`Beacon ${beacon._id} no longer exists. Skipping.`);
           continue;
         }
         console.error("Scheduler error:", err);
