@@ -15,17 +15,20 @@ import User from "./models/userModel.js";
 import { checkWebsite } from "./utils/checkWebsite.js";
 import { startScheduler } from "./workers/scheduler.js";
 
-
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.use("/user", userRouter);
 
 app.get("/jobs", authUser, async (req, res) => {
   try {
-    const userId = req.user._id; 
+    const userId = req.user._id;
     const beacons = await Beacon.find({ user: userId });
     res.json({ beacons });
   } catch (error) {
@@ -36,7 +39,7 @@ app.get("/jobs", authUser, async (req, res) => {
 
 app.get("/jobs/:id", authUser, async (req, res) => {
   try {
-    const userId = req.user._id; 
+    const userId = req.user._id;
     const beacon = await Beacon.findOne({ _id: req.params.id, user: userId });
 
     if (!beacon) {
@@ -58,7 +61,7 @@ app.post("/jobs", authUser, async (req, res) => {
       title: req.body.title,
       url: req.body.url,
       user: userId,
-      nextExecution: new Date(Date.now() + 60000)
+      nextExecution: new Date(Date.now() + 60000),
     });
 
     await User.findByIdAndUpdate(userId, { $push: { beacons: beacon._id } });
@@ -69,8 +72,6 @@ app.post("/jobs", authUser, async (req, res) => {
     res.status(500).json({ error: "Failed to create beacon" });
   }
 });
-
-
 
 app.delete("/jobs/:id", authUser, async (req, res) => {
   try {
@@ -86,13 +87,10 @@ app.delete("/jobs/:id", authUser, async (req, res) => {
     await User.findByIdAndUpdate(userId, { $pull: { beacons: beaconId } });
 
     res.json({ message: "Beacon deleted successfully" });
-
   } catch (error) {
     res.status(500).json({ error: "Failed to delete beacon" });
   }
 });
-
-
 
 app.get("/jobsRefresh", authUser, async (req, res) => {
   try {
@@ -100,7 +98,7 @@ app.get("/jobsRefresh", authUser, async (req, res) => {
     const beacons = await Beacon.find({ user: userId });
 
     const updated = await Promise.all(
-      beacons.map(async (beacon) => {
+      beacons.map(async beacon => {
         const result = await checkWebsite(beacon.url);
 
         beacon.lastStatus = result.status;
@@ -114,15 +112,10 @@ app.get("/jobsRefresh", authUser, async (req, res) => {
     );
 
     res.json({ beacons: updated });
-
   } catch (error) {
     res.status(500).json({ error: "Failed to refresh beacons" });
   }
 });
-
-
-
-
 
 async function startServer() {
   try {
@@ -132,10 +125,10 @@ async function startServer() {
     const httpServer = createServer(app);
 
     const io = new Server(httpServer, {
-      cors: { origin: "*" }
+      cors: { origin: "*" },
     });
 
-    io.on("connection", (socket) => {
+    io.on("connection", socket => {
       const userId = socket.handshake.query.userId;
       socket.join(userId);
     });
@@ -145,7 +138,6 @@ async function startServer() {
     httpServer.listen(3000, () => {
       console.log("Server listening on http://localhost:3000");
     });
-
   } catch (error) {
     console.error(error);
   }
